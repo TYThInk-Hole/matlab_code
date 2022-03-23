@@ -1,9 +1,9 @@
-function RPS_inter_individual(Lsize,pre,ite,step,reproduction_rate,selection_rate,mobility)
+function RPS_inter_individual(Lsize,pre,generation,step,reproduction_rate,selection_rate,mobility)
 
 tic
 % Lsize=300;
 % pre=0;
-% ite=200;
+% generation=200;
 % reproduction_rate=1;
 % selection_rate=1;
 % mobility=60:5:120;
@@ -13,22 +13,23 @@ Lattice=randi([0,3],Lsize,Lsize); % lattice which there exist 5species and empty
 Trace=sparse(ones(Lsize,Lsize).*(Lattice>0)); % extracting life time of individual
 Trace_time=sparse(zeros(Lsize,Lsize)); % new born individuals location on lattice
 
-M=1.8*10^(-mobility*(1/20)); % mobility
+M=1.8*10^(-mobility*(1/10)); % mobility
 
 eps=M*(Lsize^2)*2; % rate of exchange
 
 interval=1;
 
-r1=(reproduction_rate)/(reproduction_rate+selection_rate+eps);
-r2=(selection_rate)/(reproduction_rate+selection_rate+eps);
-r3=(eps)/(reproduction_rate+selection_rate+eps);
+r1=(reproduction_rate)/(reproduction_rate+selection_rate+eps); %reproduction rate
+r2=(selection_rate)/(reproduction_rate+selection_rate+eps); % selection rate
+r3=(eps)/(reproduction_rate+selection_rate+eps); %exchange rate
 
 A=[1,0;-1,0;0,1;0, -1]; % location of neighbors
 
-Data_Cell=cell(ite/(interval*step),2); %1 : stack , 2 : lattice
-for k=1:ite/step
+Data_Cell=cell(generation/(interval),2); %column (1 : stack , 2 : lattice)
+
+for k=1:generation/step % step : partition size 
     
-    for ii=1+step*(k-1):step*k
+    for ii=1:step
 
         stack_inter=zeros(Lsize^2,3);
 
@@ -138,8 +139,8 @@ for k=1:ite/step
 
             Stacks=sparse(stack_inter);
 
-            Data_Cell{(ii-pre)/interval,1}=Stacks;
-            Data_Cell{(ii-pre)/interval,2}=stack_lattice;
+            Data_Cell{(ii+step*(k-1))/interval,1}=Stacks;
+            Data_Cell{(ii+step*(k-1))/interval,2}=stack_lattice;
             clear stack_lattice Stacks;
         end
 
