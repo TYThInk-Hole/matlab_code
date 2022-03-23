@@ -25,10 +25,10 @@ r3=(eps)/(reproduction_rate+selection_rate+eps); %exchange rate
 
 A=[1,0;-1,0;0,1;0, -1]; % location of neighbors
 
-Data_Cell=cell(generation/(interval),2); %column (1 : stack , 2 : lattice)
+
 
 for k=1:generation/step % step : partition size 
-    
+    Data_Cell=cell(generation/(interval*step),2); %column (1 : stack , 2 : lattice)
     for ii=1:step
 
         stack_inter=zeros(Lsize^2,3);
@@ -155,10 +155,11 @@ for k=1:generation/step % step : partition size
         %     figure(1); heatmap(Lattice,'Colormap',summer);
         clear R rr p Cpre C1 C2 C stack_inter;
     end
-    % save(sprintf('/Data/inter3/Cell_inter3_%d_%d.mat',mobility,k),'Data_Cell','-v7.3');
+%     save(sprintf('/Volumes/yoonnas1.synology.me/yoondata/Data/inter3/Cell_inter3_%d_%d.mat',mobility,k),'Data_Cell','-v7.3');
     save(sprintf('S:/yoondata/Data/inter3/Cell_inter3_%d_%d.mat',mobility,k),'Data_Cell','-v7.3');
     disp(k)
     toc
+    clear Data_Cell
 end
 end
 

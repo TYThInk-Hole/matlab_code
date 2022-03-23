@@ -25,18 +25,16 @@ end
 %     end
 % end
 
+%%
 %%%%% data for inter %%%%%
-
+clear; clc;
 % intra=[3.3,5.65,6.5,100];
 % mobility=60:20:120;
 % [x,y]=meshgrid(intra,mobility);
-%
-% parfor i = 1:13
-%
-%     mobility=mobility_step(i);
-%     RPS_inter_individual(300,0,180000,1,1,mobility)
-%
-% end
+mobility=30:2:60;
+for i = 1:length(mobility)
+    RPS_inter_individual(300,0,180000,1000,1,1,mobility(i))
+end
 
 %%
 %%%%% make intra3
