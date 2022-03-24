@@ -40,10 +40,9 @@ end
 %%%%% make intra3
 clear; close all; clc
 intra=[2.5,5.2,100];
-mobility=60:5:120;
+mobility=30:2:60;
 [I,M]=meshgrid(intra,mobility);
-for j = 1:4
-    parfor i = 9*(j-1)+1:9*j
-        RPS_intra_individual(300,0,180000,1000,1,1,M(i),I(i),1.0,0.5)
-    end
+
+parfor i = 1 : numel(I)
+    RPS_intra_individual(300,0,180000,1000,1,1,M(i),I(i),1.0,0.5)
 end

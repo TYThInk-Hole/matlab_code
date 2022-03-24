@@ -1,9 +1,9 @@
-function RPS_intra_individual(Lsize,pre,ite,step,reproduction_rate,selection_rate,mobility,intra1,intra2,intra3)
+function RPS_intra_individual(Lsize,pre,generation,step,reproduction_rate,selection_rate,mobility,intra1,intra2,intra3)
 tic
 
 % Lsize=300;
 % pre=0;
-% ite=200;
+% generation=200;
 % step=100;
 % reproduction_rate=1;
 % selection_rate=1;
@@ -18,7 +18,7 @@ Lattice=randi([0,3],Lsize,Lsize); % lattice which there exist 5species and empty
 Trace=sparse(ones(Lsize,Lsize).*(Lattice>0)); % extracting life time of individual
 Trace_time=sparse(zeros(Lsize,Lsize)); % new born individuals location on lattice
 
-M=1.8*10^(-mobility*(1/20)); % mobility
+M=1.8*10^(-mobility*(1/10)); % mobility
 
 eps=M*(Lsize^2)*2; % rate of exchange
 
@@ -35,13 +35,14 @@ r6=(intra3)/(reproduction_rate+selection_rate+eps+intra_sum);
 
 
 A=[1,0;-1,0;0,1;0, -1]; % location of neighbors
-for k=1:ite/step
-    Data_Cell=cell(step,2); %1 : stack , 2 : lattice
-
+for k=1:generation/step
+    Data_Cell=cell(generation/(interval*step),2); %1 : stack , 2 : lattice
     for ii=1:step
+
         if  mod(ii,interval)==0
             stack_intra=zeros(Lsize^2,3);
         end
+
         R=randi([1,Lsize],Lsize^2,2); % pre-selection
         rr=randi([1,4],Lsize^2,1); % % choose location of neighbors
         p=rand(Lsize^2,1);
@@ -169,10 +170,10 @@ for k=1:ite/step
             %     clear("main_trace_time"); clear("neighbor_trace_time");
             %     clear("pp");
         end
-            Trace=Trace+(Trace~=0)-Trace_time;
-            clear Trace_time;
-            Trace_time=zeros(Lsize,Lsize);
-   
+        Trace=Trace+(Trace~=0)-Trace_time;
+        clear Trace_time;
+        Trace_time=zeros(Lsize,Lsize);
+
         if mod(ii,interval)==0
             stack_lattice=zeros(Lsize^2,3);
 
@@ -202,10 +203,11 @@ for k=1:ite/step
 
         clear R rr p Cpre C1 C2 C stack_intra;
     end
-    save(sprintf('/Volumes/yoondata/Data/intra3/Cell_intra3_%d_%d_%d.mat',intra1,mobility,k),'Data_Cell','-v7.3');
+    %     save(sprintf('/Volumes/yoondata/Data/intra3/Cell_intra3_%d_%d_%d.mat',intra1,mobility,k),'Data_Cell','-v7.3');
+    save(sprintf('S:/yoondata/Data/intra3/Cell_intra3_%d_%d_%d.mat',intra1,mobility,k),'Data_Cell','-v7.3');
     disp(k)
-    clear Data_Cell
     toc
+    clear Data_Cell
 end
 end
 
