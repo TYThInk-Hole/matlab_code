@@ -1,9 +1,9 @@
-function RPSLS_intra2_individual_L(Lsize,pre,ite,step,reproduction_rate,selection_rate,mobility,intra1,intra2,intra3,intra4,intra5)
+function RPSLS_intra2_individual_L(Lsize,pre,generation,step,reproduction_rate,selection_rate,mobility,intra1,intra2,intra3,intra4,intra5)
 tic
 
 % Lsize=300;
 % pre=0;
-% ite=200;
+% generation=200;
 % reproduction_rate=1;
 % selection_rate=1;
 % mobility=80;
@@ -18,13 +18,13 @@ Lattice=randi([0,5],Lsize,Lsize);
 Trace=sparse(ones(Lsize,Lsize).*(Lattice>0));
 Trace_time=sparse(zeros(Lsize,Lsize));
 
-M=1.8*10^(-mobility*(1/20));
+M=1.8*10^(-mobility*(1/10));
 
 eps=M*(Lsize^2)*2;
 
 intra_sum=intra1+intra2+intra3+intra4+intra5;
 
-interval=5;
+interval=2;
 
 r1=(reproduction_rate)/(reproduction_rate+selection_rate+eps+intra_sum);
 r2=(selection_rate)/(reproduction_rate+selection_rate+eps+intra_sum);
@@ -37,11 +37,13 @@ r8=(intra5)/(reproduction_rate+selection_rate+eps+intra_sum);
 
 A=[1,0;-1,0;0,1;0, -1];
 
-Data_Cell_2=cell(ite/interval,2);
-for k = 1:ite/step
-    for ii=step*(k-1):step*k
 
-        stack_intra=zeros(Lsize^2,5);
+for k = 1:generation/step
+    Data_Cell_2=cell(generation/(interval*step),2);
+    for ii=step*(k-1):step*k
+        if mod (ii,interval)==0
+            stack_intra=zeros(Lsize^2,5);
+        end
         R=randi([1,Lsize],Lsize^2,2);
         rr=randi([1,4],Lsize^2,1);
         p=rand(Lsize^2,1);
@@ -84,7 +86,7 @@ for k = 1:ite/step
                     if p(i) < r1+r2+r3
                         %%%%% chain %%%%%
                         if neighbor-main==1
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==2
                                     stack_intra(i,2)=Trace(C(i,1),C(i,2));
                                 elseif Lattice(C(i,1),C(i,2))==3
@@ -99,7 +101,7 @@ for k = 1:ite/step
                             Trace(C(i,1),C(i,2))=0;
                             Trace_time(C(i,1),C(i,2))=0;
                         elseif neighbor-main==-1
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==1
                                     stack_intra(i,2)=Trace(R(i,1),R(i,2));
                                 elseif Lattice(C(i,1),C(i,2))==2
@@ -115,7 +117,7 @@ for k = 1:ite/step
                             Trace_time(R(i,1),R(i,2))=0;
                             %%%%% 5 --> 1
                         elseif neighbor-main==-4
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==1
                                     stack_intra(i,1)=Trace(C(i,1),C(i,2));
                                 end
@@ -124,7 +126,7 @@ for k = 1:ite/step
                             Trace(C(i,1),C(i,2))=0;
                             Trace_time(C(i,1),C(i,2))=0;
                         elseif neighbor-main==4
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==5
                                     stack_intra(i,1)=Trace(R(i,1),R(i,2));
                                 end
@@ -135,7 +137,7 @@ for k = 1:ite/step
 
                             %%%% 3 --> 1
                         elseif neighbor==3 && main==1
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==3
                                     stack_intra(i,1)=Trace(R(i,1),R(i,2));
                                 end
@@ -144,7 +146,7 @@ for k = 1:ite/step
                             Trace(R(i,1),R(i,2))=0;
                             Trace_time(R(i,1),R(i,2))=0;
                         elseif neighbor==1 && main==3
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==1
                                     stack_intra(i,1)=Trace(C(i,1),C(i,2));
                                 end
@@ -154,7 +156,7 @@ for k = 1:ite/step
                             Trace_time(C(i,1),C(i,2))=0;
                             %%%%% 2-->5
                         elseif neighbor==2 && main==5
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==2
                                     stack_intra(i,5)=Trace(R(i,1),R(i,2));
                                 end
@@ -163,7 +165,7 @@ for k = 1:ite/step
                             Trace(R(i,1),R(i,2))=0;
                             Trace_time(R(i,1),R(i,2))=0;
                         elseif neighbor==5 && main==2
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==5
                                     stack_intra(i,5)=Trace(C(i,1),C(i,2));
                                 end
@@ -173,7 +175,7 @@ for k = 1:ite/step
                             Trace_time(C(i,1),C(i,2))=0;
                             %%%%% 5-->3
                         elseif neighbor==5 && main==3
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==5
                                     stack_intra(i,3)=Trace(R(i,1),R(i,2));
                                 end
@@ -182,7 +184,7 @@ for k = 1:ite/step
                             Trace(R(i,1),R(i,2))=0;
                             Trace_time(R(i,1),R(i,2))=0;
                         elseif neighbor==3 && main==5
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==3
                                     stack_intra(i,3)=Trace(C(i,1),C(i,2));
                                 end
@@ -192,7 +194,7 @@ for k = 1:ite/step
                             Trace_time(C(i,1),C(i,2))=0;
                             %%%%% 1--> 4
                         elseif neighbor==1 && main==4
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==1
                                     stack_intra(i,4)=Trace(R(i,1),R(i,2));
                                 end
@@ -201,7 +203,7 @@ for k = 1:ite/step
                             Trace(R(i,1),R(i,2))=0;
                             Trace_time(R(i,1),R(i,2))=0;
                         elseif neighbor==4 && main==1
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==4
                                     stack_intra(i,4)=Trace(C(i,1),C(i,2));
                                 end
@@ -211,7 +213,7 @@ for k = 1:ite/step
                             Trace_time(C(i,1),C(i,2))=0;
                             %%%%% 4-->2
                         elseif neighbor==4 && main==2
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==4
                                     stack_intra(i,2)=Trace(R(i,1),R(i,2));
                                 end
@@ -220,7 +222,7 @@ for k = 1:ite/step
                             Trace(R(i,1),R(i,2))=0;
                             Trace_time(R(i,1),R(i,2))=0;
                         elseif neighbor==2 && main==4
-                            if ii > pre
+                            if ii > pre && mod(ii,interval)==0
                                 if Lattice(C(i,1),C(i,2))==2
                                     stack_intra(i,4)=Trace(C(i,1),C(i,2));
                                 end
@@ -234,14 +236,14 @@ for k = 1:ite/step
                         if main==1 && neighbor ==1
                             pp=rand;
                             if pp <= 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,1)=Trace(C(i,1),C(i,2));
                                 end
                                 Lattice(C(i,1),C(i,2))=0;
                                 Trace(C(i,1),C(i,2))=0;
                                 Trace_time(C(i,1),C(i,2))=0;
                             elseif pp > 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,1)=Trace(R(i,1),R(i,2));
                                 end
                                 Lattice(R(i,1),R(i,2))=0;
@@ -253,14 +255,14 @@ for k = 1:ite/step
                         if main==2 && neighbor ==2
                             pp=rand;
                             if pp <= 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,2)=Trace(C(i,1),C(i,2));
                                 end
                                 Lattice(C(i,1),C(i,2))=0;
                                 Trace(C(i,1),C(i,2))=0;
                                 Trace_time(C(i,1),C(i,2))=0;
                             elseif pp > 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,2)=Trace(R(i,1),R(i,2));
                                 end
                                 Lattice(R(i,1),R(i,2))=0;
@@ -272,14 +274,14 @@ for k = 1:ite/step
                         if main==3 && neighbor ==3
                             pp=rand;
                             if pp <= 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,3)=Trace(C(i,1),C(i,2));
                                 end
                                 Lattice(C(i,1),C(i,2))=0;
                                 Trace(C(i,1),C(i,2))=0;
                                 Trace_time(C(i,1),C(i,2))=0;
                             elseif pp > 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,3)=Trace(R(i,1),R(i,2));
                                 end
                                 Lattice(R(i,1),R(i,2))=0;
@@ -291,14 +293,14 @@ for k = 1:ite/step
                         if main==4 && neighbor ==4
                             pp=rand;
                             if pp <= 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,4)=Trace(C(i,1),C(i,2));
                                 end
                                 Lattice(C(i,1),C(i,2))=0;
                                 Trace(C(i,1),C(i,2))=0;
                                 Trace_time(C(i,1),C(i,2))=0;
-                            elseif pp > 0.5
-                                if ii > pre
+                            elseif pp > 0.5 
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,4)=Trace(R(i,1),R(i,2));
                                 end
                                 Lattice(R(i,1),R(i,2))=0;
@@ -310,14 +312,14 @@ for k = 1:ite/step
                         if main==5 && neighbor ==5
                             pp=rand;
                             if pp <= 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,5)=Trace(C(i,1),C(i,2));
                                 end
                                 Lattice(C(i,1),C(i,2))=0;
                                 Trace(C(i,1),C(i,2))=0;
                                 Trace_time(C(i,1),C(i,2))=0;
                             elseif pp > 0.5
-                                if ii > pre
+                                if ii > pre && mod(ii,interval)==0
                                     stack_intra(i,5)=Trace(R(i,1),R(i,2));
                                 end
                                 Lattice(R(i,1),R(i,2))=0;
@@ -328,8 +330,8 @@ for k = 1:ite/step
                     end
                 end
             end
-            clear main neighbor main_trace neighbor_trace...
-                main_trace_time neighbor_trace_time pp
+%             clear main neighbor main_trace neighbor_trace...
+%                 main_trace_time neighbor_trace_time pp
         end
         Trace=Trace+(Trace~=0)-Trace_time;
         clear Trace_time;
@@ -354,12 +356,18 @@ for k = 1:ite/step
 
             Data_Cell_2{(ii-pre)/interval,1}=Stacks;
             Data_Cell_2{(ii-pre)/interval,2}=stack_lattice;
-            clear stack_lattice stack_intra Stacks;
+            clear stack_lattice Stacks;
         end
-        clear R rr p Cpre C1 C2 C;
+
+        clear R rr p Cpre C1 C2 C stack_intra;
+    
     end
-    save(sprintf('Volumes/yoonD/Data/RPSLS2/Cell_B_%d_%d.mat',intra5,mobility),'Data_Cell_2','-v7.3');
+    save(sprintf('/Volumes/yoonnas1.synology.me/yoondata/Data/RPSLS2/Cell_B_%d_%d_%d.mat',intra5,mobility,k),...
+        'Data_Cell_2','-v7.3');
+    disp(k)
     toc
+    clear Data_Cell_2
+end
 end
 
 

@@ -11,19 +11,18 @@ parfor i = 1:numel(I)
 end
 
 %%
-% parfor i = 1:16
-%     mobility=mobility_step(i);
-%     intra=[3.3, 5.65, 6.5, 100,2.2,3.3,9.3,100];
-%     for j=1:8
-%         if j < 5
-%             intra3=intra(j);
-%             RPSLS_intra_individual_L(300,0,180000,1,1,mobility,1.9,2.0,intra3,1.3,0.7)
-%         else
-%             intra5=intra(j);
-%             RPSLS_intra_individual2_L(300,0,180000,1,1,mobility,0.3,1.1,2.5,0.7,intra5)
-%         end
-%     end
-% end
+%%%%% data for intra5_2
+% intra1=0.3;
+% intra2=1.1;
+% intra3=2.5;
+% intra4=0.7;
+clear; close all; clc;
+mobility=30:2:60;
+intra=[2.2, 3.3, 9.3, 100];
+[I,M]=meshgrid(intra,mobility);
+for i = 1:numel(I)
+    RPSLS_intra2_dindividual_L(300,0,180000,500,1,1,M(i),0.3,1.1,2.5,0.7,I(i))
+end
 
 %%
 %%%%% data for inter %%%%%
