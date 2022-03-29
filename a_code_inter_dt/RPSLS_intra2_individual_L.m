@@ -40,7 +40,7 @@ A=[1,0;-1,0;0,1;0, -1];
 
 for k = 1:generation/step
     Data_Cell_2=cell(generation/(interval*step),2);
-    for ii=step*(k-1):step*k
+    for ii=1:step
         if mod (ii,interval)==0
             stack_intra=zeros(Lsize^2,5);
         end

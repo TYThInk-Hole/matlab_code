@@ -21,7 +21,7 @@ mobility=30:2:60;
 intra=[2.2, 3.3, 9.3, 100];
 [I,M]=meshgrid(intra,mobility);
 for i = 1:numel(I)
-    RPSLS_intra2_dindividual_L(300,0,180000,500,1,1,M(i),0.3,1.1,2.5,0.7,I(i))
+    RPSLS_intra2_individual_L(300,0,180000,500,1,1,M(i),0.3,1.1,2.5,0.7,I(i))
 end
 
 %%
