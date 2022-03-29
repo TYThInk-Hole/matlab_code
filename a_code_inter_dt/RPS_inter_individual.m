@@ -139,8 +139,8 @@ for k=1:generation/step % step : partition size
 
             Stacks=sparse(stack_inter);
 
-            Data_Cell{(ii+step*(k-1))/interval,1}=Stacks;
-            Data_Cell{(ii+step*(k-1))/interval,2}=stack_lattice;
+            Data_Cell{(ii-pre)/interval,1}=Stacks;
+            Data_Cell{(ii-pre)/interval,2}=stack_lattice;
             clear stack_lattice Stacks;
         end
 
