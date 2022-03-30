@@ -1,39 +1,19 @@
 %%
-%%%%%% /Volumes/yoonD/new/intra3/*.mat'
-clear; close all; clc
-mobility=60:5:120;
-intra=[2.5,5.2,100];
-interval=30;
-for i = 1:1%length(mobility)
-    num=numel(dir(sprintf('/volumes/yoonD/new/intra3/Cell_intra3_%d_%d_*.mat',intra(1),mobility(i))));
-    C=cell(num,1);
-    for ite=1:50
-        tic
-        d_s=load(sprintf('/volumes/yoonD/new/intra3/Cell_intra3_%d_%d_%d.mat',intra(1),mobility(i),ite));
-        d_c=struct2cell(d_s);
-        d_m=d_c{1,1};
-        d_d=d_m(:,1);
-        data=cell2mat(d_d);
+%%%%% combine data in one cell inter3 %%%%%
+clear; clc;
 
-        close all;
-        set(gcf,'visible','off');
-        h=histogram(nonzeros(data),100,'normalization','pdf');
-        pd=fitdist(nonzeros(data),'exponential'); hold on;
-        if mod(ite,interval)==0
-            y=pdf(pd,h.BinEdges);
-            plot(h.BinEdges,y,'--','linewidth',3); hold off;
-            axis([0 inf 1e-6 inf]);
-            %             xticks(0:1000:4000); yticks([1e-6 1e-5 1e-4 1e-3 1e-2 1e-1]);
-            xlabel('generation');ylabel('rate');
-            set(gca,'yscale','log','fontsize',17,'fontname','italic');
-            savefig(sprintf('/Volumes/yoonD/new/figure/intra3/Stack_hist_%d.fig',mobility(i)));
-            print('-depsc',sprintf('/Volumes/yoonD/new/figure/intra3/Stack_hist_%d.eps',mobility(i)));
-        end
-        C{ite,1}=pd.mu;
-        toc
-        disp(ite)
+% mobility=30:2:60;
+mobility=30:2:60;
+for i = 1:length(mobility)
+    num_file=numel(dir(sprintf('/volumes/Data/Data/inter3/Cell_inter3_%d_*.mat',mobility(i))));
+    for j = 1 : num_file
+        c1=struct2cell(load(sprintf('/volumes/Data/Data/inter3/Cell_inter3_%d_%d.mat',mobility(i),j)));
+        c_cell=c1{1,1}; 
+        Data_stack_inter3=(c_cell(~cellfun('isempty',c_cell(:,1))));
+        Data_lattice_inter3=(c_cell(~cellfun('isempty',c_cell(:,2))));
+        save(sprintf('/volumes/yoonD/RPS_data/inter3/Cell_inter3_%d_%d.mat',mobility(i),j),'Data_stack_inter3','-v7.3');
+        save(sprintf('/volumes/yoonD/RPS_data/inter3/Cell_inter3_%d_%d.mat',mobility(i),j),'Data_lattice_inter3','-v7.3');
+        clear c1 c_cell Data_stack_inter3 Data_lattice_inter3
     end
-    save(sprintf('/volumes/yoonD/new/mu_data/Cell_intra3_%d_%d',intra(1),mobility(i)),'C','-v7.3');
-    clear C h pd data d_s d_c d_m d_d
 end
 

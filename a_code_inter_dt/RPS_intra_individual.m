@@ -39,10 +39,6 @@ for k=1:generation/step
     Data_Cell=cell(generation/(interval*step),2); %1 : stack , 2 : lattice
     for ii=1:step
 
-        if  mod(ii,interval)==0
-            stack_intra=zeros(Lsize^2,3);
-        end
-
         R=randi([1,Lsize],Lsize^2,2); % pre-selection
         rr=randi([1,4],Lsize^2,1); % % choose location of neighbors
         p=rand(Lsize^2,1);
@@ -62,7 +58,7 @@ for k=1:generation/step
             neighbor_trace_time=Trace_time(C(i,1),C(i,2));
             main_trace_time=Trace_time(R(i,1),R(i,2));
 
-            if p(i)  <  r3 %move
+            if p(i) < r3 %exchange
                 Lattice(C(i,1),C(i,2))=main;
                 Lattice(R(i,1),R(i,2))=neighbor;
                 Trace(C(i,1),C(i,2))=main_trace;
@@ -70,7 +66,7 @@ for k=1:generation/step
                 Trace_time(C(i,1),C(i,2))=main_trace_time;
                 Trace_time(R(i,1),R(i,2))=neighbor_trace_time;
 
-            elseif p(i)  <  r3+r1 %reproduction
+            elseif p(i) < r3+r1 %reproduction
                 if neighbor==0 && main~=0
                     Lattice(C(i,1),C(i,2))=main;
                     Trace(C(i,1),C(i,2))=1;
