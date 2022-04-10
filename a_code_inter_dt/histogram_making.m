@@ -68,6 +68,45 @@ for i = 1:length(mobility)
     end
 
 end
+
+%%
+%%%%%% make histogram of 5species independently
+
+mobility=30:2:60;
+interval=5;
+function hist_intra5(intra,mobility,species)
+for i = 1:length(mobility)/2
+    num=numel(dir(sprintf('/volumes/yoonD/RPS/RPS_data/RPSLS2/Cell_B_%d_%d_*.mat',intra,mobility)));
+    for ite=1:num
+        if mod(ite,interval)==0
+            load(sprintf('/volumes/yoonD/RPS/RPS_Data/RPSLS2/Cell_B_%d_%d_%d.mat',intra,mobility,ite));
+            d_c=Data_Cell_2(1:300,1);
+            data=cell2mat(d_c);
+            spe=nonzeros(data(:,species));                        
+
+            close all;
+          
+            set(gcf,'visible','off');
+            h=histogram(spe,50,'normalization','pdf');
+            pd=fitdist(spe,'exponential'); hold on;
+            y=pdf(pd,h.BinEdges);
+            plot(h.BinEdges,y,'--','linewidth',3); hold off;
+            axis([0 inf 1e-6 inf]);
+            xlabel('generation');ylabel('rate');title('species_A');
+            set(gca,'yscale','log','fontsize',17,'fontname','italic');
+            savefig(sprintf('/Volumes/yoonD/RPS/RPS_paper/figure/hist5/%d/%d_Stack_hist_%d_%d_%d.fig',mobility,species,intra,mobility,ite));
+            print('-depsc',sprintf('/Volumes/yoonD/RPS/RPS_paper/figure/hist5/%d/%d_Stack_hist_%d_%d_%d.eps',mobility,species,intra,mobility,ite));
+
+            disp(ite)
+        end
+        
+        clear h pd data d_s d_c
+
+    end
+
+end
+end
+
 %%
 %%% fig3
 %%%%% mean lifespan per mobility inter3 %%%%%
@@ -122,3 +161,4 @@ for j = 1:length(intra)
     print('-depsc',sprintf('/Volumes/yoonD/RPS/RPS_paper/figure/fig4/mealifespan_mobility_%d.eps',intra));
     clear D
 end
+

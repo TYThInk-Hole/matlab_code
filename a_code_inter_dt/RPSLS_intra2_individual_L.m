@@ -37,7 +37,6 @@ r8=(intra5)/(reproduction_rate+selection_rate+eps+intra_sum);
 
 A=[1,0;-1,0;0,1;0, -1];
 
-
 for k = 1:generation/step
     Data_Cell_2=cell(generation/(interval*step),2);
     for ii=1:step
@@ -369,6 +368,3 @@ for k = 1:generation/step
     clear Data_Cell_2
 end
 end
-
-
-
